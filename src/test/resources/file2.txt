@@ -1,0 +1,25 @@
+fun foo(input: String, methods: Map<String, Int>): Map<String, Float> {
+    val counter = mutableMapOf<String, MutableSet<String>>()
+    for (i in File(input).readLines()) {
+        if (!i.matches(Regex("""\d+ / f\d"""))) throw IllegalArgumentException()
+        var (id, function) = i.split(" / ")
+        if (function !in counter.keys) counter[function] = mutableSetOf(id)
+        else {
+            counter[function]!!.add(id)
+        }
+    }
+    println(counter)
+    val answer = mutableMapOf<String, Float>()
+    for ((key, value) in methods) {
+        if (key in counter.keys) {
+            if (counter[key]!!.size <= value!!) {
+                answer[key] = counter[key]!!.size / value.toFloat() * 100
+            } else {
+                throw IllegalStateException()
+            }
+        } else {
+            answer[key] = 0.0F
+        }
+    }
+    return answer
+}

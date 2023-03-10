@@ -1,0 +1,52 @@
+fun myFun(places: MutableList<MutableList<Boolean>>, requests: Map<String, Pair<Int, Int>>): Any {
+    var count = 0
+    var row = 0
+    var i = 0
+    val answer = mutableMapOf<String, MutableList<Int>>()
+    for ((key, value) in requests) {
+        row = value.first
+        count = value.second
+        while (count != 0 && i < places[row].size) {
+            if (!places[row][i]) {
+                places[row][i] = true
+                if (key !in answer.keys) {
+                    answer[key] = mutableListOf(i)
+                } else {
+                    answer[key]!!.add(i)
+                }
+                count--
+            }
+            i++
+        }
+        i = 0
+        if (count != 0) {
+            throw IllegalStateException()
+        }
+    }
+    println(places)
+    return answer
+}
+
+@Test
+    fun myFun() {
+        assertEquals(
+            mapOf("Вася" to mutableListOf(1,2), "Петя" to mutableListOf(1)), myFun(
+                mutableListOf(
+                    mutableListOf(true, false, false, false, true, true),
+                    mutableListOf(true, false, true, false)
+                ), mapOf(
+                    "Вася" to Pair(0, 2), "Петя" to Pair(1, 1)
+                )
+            )
+        )
+        assertThrows(IllegalStateException::class.java) {
+            myFun(
+                mutableListOf(
+                    mutableListOf(true, true, true, true, true, true),
+                    mutableListOf(true, false, true, false)
+                ), mapOf(
+                    "Вася" to Pair(0, 2), "Петя" to Pair(1, 1)
+                )
+            )
+        }
+    }

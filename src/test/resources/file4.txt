@@ -1,0 +1,20 @@
+fun foo(inputName: String): Int {
+    val commands = mutableListOf<String>()
+    for (line in File(inputName).readLines()) {
+        commands.add(line)
+    }
+    var i = 0
+    var answer = 0
+    var command = ""
+    while (i < commands.size) {
+        command = commands[i]
+        if (command.matches(Regex("""ADD \d+"""))) answer += command.split(" ")[1].toInt()
+        else if (command.matches(Regex("""SUB \d+"""))) answer -= command.split(" ")[1].toInt()
+        else if (command.matches(Regex("""SHIFT \d+"""))) answer = answer shl command.split(" ")[1].toInt()
+        else if (command.matches(Regex("""GOTO \d+"""))) {
+            i = command.split(" ")[1].toInt() - 1
+        }
+        i += 1
+    }
+    return answer
+}
